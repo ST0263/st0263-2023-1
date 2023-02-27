@@ -203,10 +203,75 @@ ubuntu@dirIP $ chmod 400 ST0255.pem
 
 En esta sección vamos a proceder a instalar las dependencias necesarias para poder ejecutar nuestro servicio 2 en python. Se debe garantizar que se cuente con una versión de python igual o superior a 3.7 así como una versión de pip igual o superior a 9.0.1.
 
-Particularmente, para el caso de python, se hace necesario generar las interfaces a partir de la deinifición del archivo "Service.proto" y a diferencia de node.js, esto no se hace en tiempo de ejecución. Para esto, se hace necesario ejecutar el siguiente comando:
+Antes que todo, actualice 
 
 ```sh
- $ python3 -m grpc_tools.protoc -I ../protobufs --python_out=. --pyi_out=. --grpc_python_out=. ../protobufs/Service.proto
+ $ sudo apt-get update
+ $ sudo apt-get upgrade
+```
+
+Ahora proceda a instalar python3 así como actualizad pip:
+
+```sh
+ $ sudo apt-get install python3
+ $ sudo apt-get install python3-pip
+```
+
+Instale las librerias requeridas para gRPC:
+
+```sh
+$ sudo python3 -m pip install grpcio
+$ sudo python3 -m pip install grpcio-tools
+```
+
+Ahora, se clona el repositorio donde está el código:
+
+```sh
+$ sudo git clone https://github.com/ST0263/st0263-2023-1.git 
+```
+
+Particularmente, para el caso de python, se hace necesario generar las interfaces a partir de la deinifición del archivo "Service.proto" y a diferencia de node.js, esto no se hace en tiempo de ejecución. Para esto, se hace necesario estar en el directorio "src" de la carpeta "PaymentService" y ejecutar el siguiente comando:
+
+```sh
+ $ sudo python3 -m grpc_tools.protoc -I ../protobufs --python_out=. --pyi_out=. --grpc_python_out=. ../protobufs/Service.proto
+```
+
+Como se puede observar, se generaron tres archivos. Ahora puede proceder a ejecutar el servicio de la siguiente forma:
+
+```sh
+$ sudo python3 server.py
+```
+#### **5.2. Instalación de Servicio 1 en Node.js :**
+
+En esta sección vamos a proceder a instalar las dependencias necesarias para poder ejecutar nuestro servicio 1 en node.js. Se debe garantizar que se cuente con una versión de node igual o superior a 18.X.
+
+Antes que todo, actualice el sistema operativo de la máquina:
+
+```sh
+ $ sudo apt-get update
+ $ sudo apt-get upgrade
+```
+Ahora se procede a instalar la versión de Node.js v19.X:
+
+```sh
+$ sudo curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash - && sudo apt-get install -y nodejs
+```
+Ahora, se clona el repositorio donde está el código:
+
+```sh
+$ sudo git clone https://github.com/ST0263/st0263-2023-1.git 
+```
+Localizados en el directorio "src" de la carpeta "OnlineService", modifique el archvo ".env de la siguiente forma:
+
+```sh
+$ sudo nano .env
+```
+se requiere modificar la variable "REMOTE_HOST" y asignarle la dirección IP pública donde se está ejecutando el servicio2 (servicio en python). Se hace necesario verificar que el la instancia EC2 donde corre el servicio 2 (python), permita el tráfico TCP entrante en el puerto seleccionado (para este caso 8080).
+
+Finalmente, ejecute el servicio de la siguiente forma:
+
+```sh
+$ sudo node server.js
 ```
 
 *******
