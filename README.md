@@ -1,2 +1,3 @@
 # st0263-2023-1
-Repository for TET course
+
+Repositorio para los diferentes laboratorios del curso de TET.
